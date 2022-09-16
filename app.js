@@ -18,12 +18,30 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
+//////////////////////// Requesting Targetting All Article  /////////////////////////
+
+app
+  .route("/articles/:articleTitle")
+  .get(function (req, res) {
+
+    Article.findOne({title: req.params.articleTitle}, function(err, foundArticle){
+        if (foundArticle) {
+            res.send(foundArticle);
+        } else {
+            res.send("No articles matching that title was found.")
+        };
+    });
+  })
+  .post(function (req, res) {})
+  .delete(function (req, res) {});
+
+//////////////////////// Requesting Targetting A Specific Article  /////////////////////////
+
 app
   .route("/articles")
   .get(function (req, res) {
     Article.find(function (err, foundArticles) {
       if (!err) {
-        res.send("Successfully gotten all articles");
         res.send(foundArticles);
       } else {
         res.send(err);
