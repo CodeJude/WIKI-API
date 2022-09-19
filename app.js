@@ -18,7 +18,9 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
-//////////////////////// Requesting Targetting All Article  /////////////////////////
+
+
+//////////////////////// Request Targetting A Specific Article  /////////////////////////
 
 app
   .route("/articles/:articleTitle")
@@ -34,11 +36,11 @@ app
   })
   .put(function (req, res){
 
-    Article.findOneAndUpdate(
+    Article.updateOne(
          {title: req.params.articleTitle}, { $set: 
           {title: req.body.title, content: req.body.content}
         },
-         {new: true},
+         {overwrite: true},
          function(err, updateUser){
             if (!err) {
                 res.send("Successfully updated article.");
@@ -47,9 +49,34 @@ app
             }
          }
     );
+  })
+  .patch(function (req, res){
+    Article.updateOne(
+      {title: req.params.articleTitle}, { $set: req.body},
+      {new: true},
+      function(err){
+        if(!err){
+          res.send("Successfully updated article")
+        } else {
+          res.send(err)
+        }
+      }
+    );
+  })
+  .delete(function(req, res){
+    Article.deleteOne(
+      {title: req.params.articleTitle},
+      function(err){
+        if(!err){
+          res.send("Successfully deleted the corresponding article")
+        } else {
+          res.send(err)
+        }
+      }
+    );
   });
 
-//////////////////////// Requesting Targetting A Specific Article  /////////////////////////
+//////////////////////// Request Targetting All  Articles  /////////////////////////
 
 app
   .route("/articles")
