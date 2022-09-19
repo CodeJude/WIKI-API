@@ -32,8 +32,22 @@ app
         };
     });
   })
-  .post(function (req, res) {})
-  .delete(function (req, res) {});
+  .put(function (req, res){
+
+    Article.findOneAndUpdate(
+         {title: req.params.articleTitle}, { $set: 
+          {title: req.body.title, content: req.body.content}
+        },
+         {new: true},
+         function(err, updateUser){
+            if (!err) {
+                res.send("Successfully updated article.");
+            } else {
+              res.json(updateUser);
+            }
+         }
+    );
+  });
 
 //////////////////////// Requesting Targetting A Specific Article  /////////////////////////
 
